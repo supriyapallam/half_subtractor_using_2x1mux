@@ -1,0 +1,36 @@
+//Design Code
+module mux21(output out,input s1,in0,in1);
+  assign out=((~s1)&(in0)|(s1)&(in1));
+endmodule
+
+module hs(output diff,barrow,input a,b);
+  wire o1;
+  mux21 a1(o1,a,1'b1,1'b0);
+  mux21 a2(diff,b,a,o1);
+  mux21 a3(barrow,a,b,1'b0);
+endmodule
+
+//Test Bench Code
+module tb();
+  wire diff,barrow;
+  reg a,b;
+  hs DUT(diff,barrow,a,b);
+  initial
+    begin
+      integer i;
+      for(i=0;i<4;i=i+1)
+        begin
+          {a,b}=i;
+          #10;
+        end
+    end
+  initial
+    begin
+      $monitor("a=%b,b=%b,diff=%b,barrow=%b",a,b,diff,barrow);
+    end
+  initial
+    begin
+      $dumpfile("test.vcd");
+      $dumpvars(1);
+    end
+endmodule
